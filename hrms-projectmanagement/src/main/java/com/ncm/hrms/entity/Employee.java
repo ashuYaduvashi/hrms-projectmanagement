@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.ncm.hrms.enums.EmpRole;
 import com.ncm.hrms.enums.EmpStatus;
 
 import jakarta.persistence.AttributeOverride;
@@ -75,8 +76,12 @@ public class Employee {
 
     @Enumerated(EnumType.STRING)
     private EmpStatus status;
+    
+    @Enumerated(EnumType.STRING)
+    private EmpRole role;
 
-    @OneToMany(
+    
+	@OneToMany(
         mappedBy = "employee",
         cascade = { CascadeType.PERSIST, CascadeType.MERGE },
         orphanRemoval = false
@@ -112,7 +117,27 @@ public class Employee {
 		this.password = password;
 	}
 
-
+    public Employee(String name, String email, String password, String phoneNumber, String education,
+			Designation designation, LocalDate hireDate, Address currentAddress, Address permanentAddress,
+			boolean sameAsPermanent, EmpStatus status, EmpRole role, List<EmployeeTechnology> technologies,
+			List<EmployeeAssignment> assignments, List<LeaveRequest> leaveRequests) {
+		super();
+		this.name = name;
+		this.email = email;
+		this.password = password;
+		this.phoneNumber = phoneNumber;
+		this.education = education;
+		this.designation = designation;
+		this.hireDate = hireDate;
+		this.currentAddress = currentAddress;
+		this.permanentAddress = permanentAddress;
+		this.sameAsPermanent = sameAsPermanent;
+		this.status = status;
+		this.role = role;
+		this.technologies = technologies;
+		this.assignments = assignments;
+		this.leaveRequests = leaveRequests;
+	}
 
 	public Employee(
             String name,
@@ -182,8 +207,27 @@ public class Employee {
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
+    
+    
+    public EmpRole getRole() {
+		return role;
+	}
 
-    public String getEducation() {
+
+
+	public void setRole(EmpRole role) {
+		this.role = role;
+	}
+
+
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
+
+
+
+	public String getEducation() {
         return education;
     }
 

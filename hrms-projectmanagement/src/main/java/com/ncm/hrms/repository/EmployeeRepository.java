@@ -10,6 +10,12 @@ import com.ncm.hrms.entity.Employee;
 	public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
 	    Optional<Employee> findByEmail(String email);
+
+		boolean existsByEmail(String email);
+
+		
+
+		Optional<Employee> findByNameContainingIgnoreCase(String name);
 	}
 
 

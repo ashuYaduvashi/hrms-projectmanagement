@@ -10,6 +10,11 @@ public class ModulesResponse {
 
 	    private Long employeeId;
 	    private String employeeName;
+	    
+	    
+		public ModulesResponse() {
+			super();
+		}
 		public ModulesResponse(Long id, String name, String description, Long projectId, String projectName,
 				Long employeeId, String employeeName) {
 			super();
