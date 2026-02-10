@@ -2,6 +2,8 @@ package com.ncm.hrms.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import com.ncm.hrms.dto.request.LeaveRequestDto;
@@ -20,32 +22,23 @@ public class LeaveRequestController {
 
     @PostMapping("/apply")
     public ResponseEntity<LeaveResponseDto> applyLeave(
-            @RequestParam String employeeEmail,
-            @RequestBody LeaveRequestDto leaveRequestDto) {
+            Authentication authentication,
+            @RequestBody LeaveRequestDto dto) {
 
-        LeaveResponseDto response =
-                leaveRequestService.applyLeave(employeeEmail, leaveRequestDto);
-
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        String email = authentication.getName();
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(leaveRequestService.applyLeave(email, dto));
     }
 
+    @PreAuthorize("hasRole('MANAGER') or hasRole('ADMIN')")
     @PutMapping("/{leaveId}/approve")
-    public ResponseEntity<LeaveResponseDto> approveLeave(
-            @PathVariable Long leaveId) {
-
-        LeaveResponseDto response =
-                leaveRequestService.approveLeave(leaveId);
-
-        return ResponseEntity.ok(response);
+    public ResponseEntity<LeaveResponseDto> approveLeave(@PathVariable Long leaveId) {
+        return ResponseEntity.ok(leaveRequestService.approveLeave(leaveId));
     }
 
+    @PreAuthorize("hasRole('MANAGER') or hasRole('ADMIN')")
     @PutMapping("/{leaveId}/reject")
-    public ResponseEntity<LeaveResponseDto> rejectLeave(
-            @PathVariable Long leaveId) {
-
-        LeaveResponseDto response =
-                leaveRequestService.rejectLeave(leaveId);
-
-        return ResponseEntity.ok(response);
+    public ResponseEntity<LeaveResponseDto> rejectLeave(@PathVariable Long leaveId) {
+        return ResponseEntity.ok(leaveRequestService.rejectLeave(leaveId));
     }
 }

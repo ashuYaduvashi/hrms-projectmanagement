@@ -27,4 +27,9 @@ List<EmployeeAssignment> findByProject(Project project);
 @Query("SELECT ea FROM EmployeeAssignment ea WHERE ea.employee.id = :employeeId AND ea.project.id = :projectId")
 List<EmployeeAssignment> findByEmployeeIdAndProjectId(@Param("employeeId") Long employeeId, @Param("projectId") Long projectId);
 
+
+
+
+boolean existsByEmployeeAndProject(Employee employee, Project project);
+
 }

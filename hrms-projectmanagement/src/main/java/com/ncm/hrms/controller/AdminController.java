@@ -6,17 +6,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import com.ncm.hrms.entity.Employee;
-import com.ncm.hrms.repository.EmployeeRepository;
+import com.ncm.hrms.service.AdminService;
 
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
 
     @Autowired
-    private EmployeeRepository employeeRepository;
+    private AdminService adminService;
 
     @GetMapping("/employees")
     public List<Employee> getAllEmployees() {
-        return employeeRepository.findAll();
+        return adminService.getAllEmployees();
     }
 }

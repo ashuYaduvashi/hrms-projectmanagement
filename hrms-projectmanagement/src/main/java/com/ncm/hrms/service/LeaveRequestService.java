@@ -55,9 +55,15 @@ public class LeaveRequestService {
     
     
     public LeaveResponseDto approveLeave(Long leaveId) {
-
+    	
         LeaveRequest leaveRequest = leaveRequestRepository.findById(leaveId)
                 .orElseThrow(() -> new IllegalArgumentException("Leave request not found"));
+        
+
+    	if (leaveRequest.getLeaveStatus() != LeaveStatus.PENDING) {
+    	    throw new IllegalStateException("Leave already processed");
+    	}
+
 
         leaveRequest.setLeaveStatus(LeaveStatus.APPROVED);
         return mapToResponseDto(leaveRequestRepository.save(leaveRequest));
@@ -68,6 +74,11 @@ public class LeaveRequestService {
 
         LeaveRequest leaveRequest = leaveRequestRepository.findById(leaveId)
                 .orElseThrow(() -> new IllegalArgumentException("Leave request not found"));
+
+    	if (leaveRequest.getLeaveStatus() != LeaveStatus.PENDING) {
+    	    throw new IllegalStateException("Leave already processed");
+    	}
+
 
         leaveRequest.setLeaveStatus(LeaveStatus.REJECTED);
         return mapToResponseDto(leaveRequestRepository.save(leaveRequest));

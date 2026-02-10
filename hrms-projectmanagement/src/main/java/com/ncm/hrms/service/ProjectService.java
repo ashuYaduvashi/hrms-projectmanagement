@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ncm.hrms.dto.request.ModulesRequest;
 import com.ncm.hrms.dto.request.ProjectRequest;
 import com.ncm.hrms.dto.response.EmployeeAssignmentResponse;
 import com.ncm.hrms.dto.response.ModulesResponse;
@@ -21,6 +22,7 @@ import com.ncm.hrms.repository.EmployeeAssignmentRepository;
 import com.ncm.hrms.repository.EmployeeRepository;
 import com.ncm.hrms.repository.ModulesRepository;
 import com.ncm.hrms.repository.ProjectRepository;
+
 
 @Service
 @Transactional
@@ -42,8 +44,12 @@ public class ProjectService {
         this.assignmentRepository = assignmentRepository;
     }
 
-
+ 
     public ProjectResponse createProject(ProjectRequest request) {
+        if (request.getEndDate().isBefore(request.getStartDate())) {
+            throw new IllegalArgumentException("Project end date cannot be before start date");
+        }
+
         Project project = new Project();
         project.setProjectName(request.getProjectName());
         project.setDescription(request.getDescription());
@@ -54,12 +60,10 @@ public class ProjectService {
         return mapToProjectResponse(projectRepository.save(project));
     }
 
-   
     @Transactional(readOnly = true)
     public ProjectResponse getProjectById(Long id) {
         Project project = projectRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Project not found"));
-
         return mapToProjectResponse(project);
     }
 
@@ -79,7 +83,7 @@ public class ProjectService {
                 .collect(Collectors.toList());
     }
 
-    // ================= ASSIGN EMPLOYEE =================
+   
     public EmployeeAssignmentResponse assignEmployeeToProject(
             Long employeeId,
             Long projectId,
@@ -94,6 +98,14 @@ public class ProjectService {
         Modules module = modulesRepository.findById(moduleId)
                 .orElseThrow(() -> new RuntimeException("Module not found"));
 
+        if (!module.getProject().getProjectId().equals(project.getProjectId())) {
+            throw new IllegalStateException("Module does not belong to this project");
+        }
+
+        if (assignmentRepository.existsByEmployeeAndProject(employee, project)) {
+            throw new IllegalStateException("Employee already assigned to this project");
+        }
+
         EmployeeAssignment assignment = new EmployeeAssignment();
         assignment.setEmployee(employee);
         assignment.setProject(project);
@@ -104,20 +116,15 @@ public class ProjectService {
         return mapToAssignmentResponse(assignmentRepository.save(assignment));
     }
 
-    // ================= PROJECT ASSIGNMENTS =================
-//    @Transactional(readOnly = true)
-//    public List<EmployeeAssignmentResponse> getProjectAssignments(Long projectId) {
-//        Project project = projectRepository.findById(projectId)
-//                .orElseThrow(() -> new RuntimeException("Project not found"));
-//
-//        return assignmentRepository.findByProject(project)
-//                .stream()
-//                .map(this::mapToAssignmentResponse)
-//                .collect(Collectors.toList());
-//    }
+  
+    public ModulesResponse createModule(ModulesRequest dto) {
+        Project project = projectRepository.findById(dto.getProjectId())
+                .orElseThrow(() -> new RuntimeException("Project not found"));
 
-    // ================= MODULES =================
-    public ModulesResponse createModule(Modules module) {
+        Modules module = new Modules();
+        module.setName(dto.getName());
+        module.setProject(project);
+
         return mapToModulesResponse(modulesRepository.save(module));
     }
 
@@ -129,7 +136,7 @@ public class ProjectService {
                 .collect(Collectors.toList());
     }
 
-    // ================= MAPPERS =================
+ 
     private ProjectResponse mapToProjectResponse(Project project) {
         ProjectResponse dto = new ProjectResponse();
         dto.setProjectId(project.getProjectId());

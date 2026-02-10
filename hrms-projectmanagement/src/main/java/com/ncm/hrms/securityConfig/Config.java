@@ -32,7 +32,7 @@ public class Config {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/auth/**").permitAll()
 
-                // HRMS ROLE-BASED ACCESS
+               
                 .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
                 .requestMatchers("/projects/**")
                     .hasAnyAuthority("ROLE_ADMIN", "ROLE_MANAGER")

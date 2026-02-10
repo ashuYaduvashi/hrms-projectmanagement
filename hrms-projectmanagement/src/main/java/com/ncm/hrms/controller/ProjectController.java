@@ -4,11 +4,11 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.*;
 
+import com.ncm.hrms.dto.request.ModulesRequest;
 import com.ncm.hrms.dto.request.ProjectRequest;
 import com.ncm.hrms.dto.response.EmployeeAssignmentResponse;
 import com.ncm.hrms.dto.response.ModulesResponse;
 import com.ncm.hrms.dto.response.ProjectResponse;
-import com.ncm.hrms.entity.Modules;
 import com.ncm.hrms.service.ProjectService;
 
 @RestController
@@ -21,30 +21,28 @@ public class ProjectController {
         this.projectService = projectService;
     }
 
-    @PostMapping
+  
+    @PostMapping 
     public ProjectResponse createProject(@RequestBody ProjectRequest request) {
         return projectService.createProject(request);
     }
 
-   
     @GetMapping("/{id}")
     public ProjectResponse getProjectById(@PathVariable Long id) {
         return projectService.getProjectById(id);
     }
 
-   
     @GetMapping
     public List<ProjectResponse> getAllProjects() {
         return projectService.getAllProjects();
     }
 
-    
     @GetMapping("/active")
     public List<ProjectResponse> getActiveProjects() {
         return projectService.getActiveProjects();
     }
 
-   
+  
     @PostMapping("/assign")
     public EmployeeAssignmentResponse assignEmployee(
             @RequestParam Long employeeId,
@@ -54,12 +52,10 @@ public class ProjectController {
         return projectService.assignEmployeeToProject(employeeId, projectId, moduleId);
     }
 
-    
     @PostMapping("/modules")
-    public ModulesResponse createModule(@RequestBody Modules module) {
-        return projectService.createModule(module);
+    public ModulesResponse createModule(@RequestBody ModulesRequest dto) {
+        return projectService.createModule(dto);
     }
-
 
     @GetMapping("/{projectId}/modules")
     public List<ModulesResponse> getProjectModules(@PathVariable Long projectId) {

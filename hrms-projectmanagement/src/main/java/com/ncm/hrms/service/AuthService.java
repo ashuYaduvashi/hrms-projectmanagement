@@ -25,10 +25,14 @@ public class AuthService {
 
     public void register(String email, String password) {
 
+        if (employeeRepository.findByEmail(email).isPresent()) {
+            throw new RuntimeException("Email already exists");
+        }
+
         Employee emp = new Employee();
         emp.setEmail(email);
         emp.setPassword(passwordEncoder.encode(password));
-        emp.setRole(EmpRole.ROLE_EMPLOYEE); 
+        emp.setRole(EmpRole.ROLE_EMPLOYEE);
 
         employeeRepository.save(emp);
     }
