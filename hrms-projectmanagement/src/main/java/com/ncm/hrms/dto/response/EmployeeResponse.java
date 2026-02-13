@@ -9,6 +9,7 @@ import java.util.List;
 import com.ncm.hrms.entity.Address;
 import com.ncm.hrms.entity.EmployeeAssignment;
 import com.ncm.hrms.entity.LeaveRequest;
+import com.ncm.hrms.entity.Modules;
 import com.ncm.hrms.enums.EmpStatus;
 
 public class EmployeeResponse {
@@ -35,6 +36,7 @@ public class EmployeeResponse {
   private List<EmployeeAssignment> assignments;
     
     private List<LeaveRequest> leaveRequests ;
+    private List<Modules> modules;
 
 	public Long getId() {
 		return id;
@@ -155,6 +157,18 @@ public class EmployeeResponse {
 	public void setLeaveRequests(List<LeaveRequest> leaveRequests) {
 		this.leaveRequests = leaveRequests;
 	}
+
+	public List<Modules> getModules() {
+		return modules;
+	}
+
+	public void setModules(List<Modules> modules) {
+		this.modules = modules;
+	}
+
+
+
+	
     
     
 }

@@ -1,10 +1,9 @@
 package com.ncm.hrms.service;
 
-
 import java.util.Collections;
 import java.util.stream.Collectors;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,7 +15,6 @@ import com.ncm.hrms.dto.response.EmployeeTechnologyResponse;
 import com.ncm.hrms.entity.Address;
 import com.ncm.hrms.entity.Designation;
 import com.ncm.hrms.entity.Employee;
-import com.ncm.hrms.enums.EmpStatus;
 import com.ncm.hrms.repository.DesignationRepository;
 import com.ncm.hrms.repository.EmployeeRepository;
 
@@ -25,59 +23,45 @@ public class EmployeeService {
 
     private final EmployeeRepository employeeRepository;
     private final DesignationRepository designationRepository;
-    private final PasswordEncoder passwordEncoder;
 
     public EmployeeService(EmployeeRepository employeeRepository,
-                           DesignationRepository designationRepository,
-                           PasswordEncoder passwordEncoder) {
+                           DesignationRepository designationRepository) {
         this.employeeRepository = employeeRepository;
         this.designationRepository = designationRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
-
-   
-    @Transactional
-    public EmployeeResponse registerEmployee(EmployeeRequest request) {
-
-        if (employeeRepository.existsByEmail(request.getEmail())) {
-            throw new IllegalArgumentException("Email already exists");
-        }
-
-        Employee employee = new Employee();
-        mapRequestToEmployee(employee, request);
-
-        employee.setPassword(passwordEncoder.encode(request.getPassword()));
-        employee.setStatus(EmpStatus.ACTIVE);
-
-        employeeRepository.save(employee);
-        return mapEmployeeToResponse(employee);
-    }
-
-   
-    @Transactional
-    public EmployeeResponse updateEmployee(Long id, EmployeeRequest request) {
-
-        Employee employee = employeeRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Employee not found"));
-
-        mapRequestToEmployee(employee, request);
-        return mapEmployeeToResponse(employee);
     }
 
  
-    @Transactional(readOnly = true)
-    public EmployeeResponse getEmployee(Long id) {
+    @Transactional
+    public EmployeeResponse updateEmployeeProfile(Authentication authentication,
+                                                  EmployeeRequest request) {
 
-        Employee employee = employeeRepository.findById(id)
+        String email = authentication.getName();
+
+        Employee employee = employeeRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("Employee not found"));
+
+        mapRequestToEmployee(employee, request);
+
+        return mapEmployeeToResponse(employee);
+    }
+
+   
+    @Transactional(readOnly = true)
+    public EmployeeResponse getEmployeeProfile(Authentication authentication) {
+
+        String email = authentication.getName();
+
+        Employee employee = employeeRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("Employee not found"));
 
         return mapEmployeeToResponse(employee);
     }
+
+   
 
     private void mapRequestToEmployee(Employee employee, EmployeeRequest request) {
 
         employee.setName(request.getName());
-        employee.setEmail(request.getEmail());
         employee.setPhoneNumber(request.getPhoneNumber());
         employee.setEducation(request.getEducation());
         employee.setHireDate(request.getHireDate());
@@ -87,7 +71,6 @@ public class EmployeeService {
             employee.setStatus(request.getStatus());
         }
 
-       
         if (request.getDesignationId() != null) {
             Designation designation = designationRepository.findById(request.getDesignationId())
                     .orElseThrow(() -> new IllegalArgumentException("Designation not found"));
@@ -97,15 +80,14 @@ public class EmployeeService {
         employee.setCurrentAddress(toAddress(request.getCurrentAddress()));
         employee.setPermanentAddress(toAddress(request.getPermanentAddress()));
 
-       
         employee.setAssignments(request.getAssignments());
         employee.setLeaveRequests(request.getLeaveRequests());
     }
 
-   
     private EmployeeResponse mapEmployeeToResponse(Employee employee) {
 
         EmployeeResponse response = new EmployeeResponse();
+
         response.setId(employee.getId());
         response.setName(employee.getName());
         response.setEmail(employee.getEmail());
@@ -146,7 +128,6 @@ public class EmployeeService {
         return response;
     }
 
-   
     private Address toAddress(AddressDto dto) {
         if (dto == null) return null;
 
@@ -160,5 +141,4 @@ public class EmployeeService {
         address.setPincode(dto.getPincode());
         return address;
     }
-
 }

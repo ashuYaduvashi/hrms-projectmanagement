@@ -1,13 +1,18 @@
 package com.ncm.hrms.controller;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.*;
 
+import com.ncm.hrms.dto.request.AuthRequest;
+import com.ncm.hrms.dto.request.RegisterRequest;
 import com.ncm.hrms.service.AuthService;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/auth")
 public class AuthController {
 
@@ -15,22 +20,24 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(
-            @RequestParam String email,
-            @RequestParam String password) {
+    public ResponseEntity<?> login(@RequestBody AuthRequest request) {
 
-        authService.login(email, password);
+        String token = authService.login(
+                request.getEmail(),
+                request.getPassword()
+        );
 
-        return ResponseEntity.ok("Login successful for " + email);
+        return ResponseEntity.ok().body(Map.of(
+                "token", token
+        ));
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(
-            @RequestParam String email,
-            @RequestParam String password) {
+    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
 
-        authService.register(email, password);
-
-        return ResponseEntity.ok("Employee registered successfully");
+        authService.register(request);
+      
+        return ResponseEntity.ok("Registered Successfully");
     }
+
 }
