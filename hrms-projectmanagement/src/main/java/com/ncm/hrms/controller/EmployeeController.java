@@ -23,7 +23,7 @@ public class EmployeeController {
         return employeeService.getEmployeeProfile(authentication);
     }
 
-    @PutMapping("/profile")
+    @PutMapping("/upProfile")
     public EmployeeResponse updateProfile(Authentication authentication,
                                           @RequestBody EmployeeRequest request) {
         return employeeService.updateEmployeeProfile(authentication, request);

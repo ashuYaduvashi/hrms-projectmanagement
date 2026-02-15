@@ -12,5 +12,6 @@ public interface TechnologyRepository extends JpaRepository<Technology, Long> {
 
 Optional<Technology> findByName(String name);
 boolean existsByName(String name);
+boolean existsByNameIgnoreCase(String name);
 
 }

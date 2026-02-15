@@ -12,6 +12,7 @@ import com.ncm.hrms.service.LeaveRequestService;
 
 @RestController
 @RequestMapping("/api/leaves")
+@CrossOrigin
 public class LeaveRequestController {
 
     private final LeaveRequestService leaveRequestService;

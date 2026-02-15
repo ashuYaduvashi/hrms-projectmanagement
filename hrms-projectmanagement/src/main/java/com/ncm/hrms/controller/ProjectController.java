@@ -13,6 +13,7 @@ import com.ncm.hrms.service.ProjectService;
 
 @RestController
 @RequestMapping("/projects")
+@CrossOrigin
 public class ProjectController {
 
     private final ProjectService projectService;
