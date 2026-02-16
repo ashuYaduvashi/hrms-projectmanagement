@@ -43,7 +43,9 @@ public class Config {
                 .requestMatchers("/auth/**").permitAll()
 
                 .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
-                .requestMatchers("/projects/**")
+                .requestMatchers("/leaves/**")
+                   .hasAnyAuthority("ROLE_ADMIN","ROLE_EMPLOYEE")
+                .requestMatchers("/projects/**","/technologies/**")
                     .hasAnyAuthority("ROLE_ADMIN", "ROLE_MANAGER")
                 .requestMatchers("/employee/**")
                     .hasAuthority("ROLE_EMPLOYEE")
@@ -51,7 +53,6 @@ public class Config {
                 .anyRequest().authenticated()
             );
 
-        // Add JWT filter before UsernamePasswordAuthenticationFilter
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

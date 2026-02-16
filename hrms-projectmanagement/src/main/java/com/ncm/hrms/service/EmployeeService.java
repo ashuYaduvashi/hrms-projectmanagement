@@ -1,6 +1,7 @@
 package com.ncm.hrms.service;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.security.core.Authentication;
@@ -55,6 +56,16 @@ public class EmployeeService {
                 .orElseThrow(() -> new IllegalArgumentException("Employee not found"));
 
         return mapEmployeeToResponse(employee);
+    }
+
+    
+    @Transactional(readOnly = true)
+    public List<EmployeeResponse> getAllEmployees() {
+
+        return employeeRepository.findAll()
+                .stream()
+                .map(this::mapEmployeeToResponse)
+                .collect(Collectors.toList());
     }
 
    

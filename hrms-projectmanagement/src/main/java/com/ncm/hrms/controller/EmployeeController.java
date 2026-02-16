@@ -1,6 +1,8 @@
 package com.ncm.hrms.controller;
 
 
+import java.util.List;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +29,11 @@ public class EmployeeController {
     public EmployeeResponse updateProfile(Authentication authentication,
                                           @RequestBody EmployeeRequest request) {
         return employeeService.updateEmployeeProfile(authentication, request);
+    }
+    
+    @GetMapping("/all")
+    public List<EmployeeResponse> getAllEmployees() {
+        return employeeService.getAllEmployees();
     }
 }
 

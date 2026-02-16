@@ -117,15 +117,51 @@ public class ProjectService {
     }
 
   
+//    public ModulesResponse createModule(ModulesRequest dto) {
+//        Project project = projectRepository.findById(dto.getProjectId())
+//                .orElseThrow(() -> new RuntimeException("Project not found"));
+//
+//        Modules module = new Modules();
+//        module.setName(dto.getName());
+//        module.setProject(project);
+//
+//        return mapToModulesResponse(modulesRepository.save(module));
+//    }
+    
     public ModulesResponse createModule(ModulesRequest dto) {
+        
+       
+        
+
+        if (dto.getEmployeeId() == null) {
+            throw new RuntimeException("Employee ID is required");
+        }
+        
+        if (dto.getProjectId() == null) {
+            throw new RuntimeException("Project ID is required");
+        }
+        
+        
         Project project = projectRepository.findById(dto.getProjectId())
-                .orElseThrow(() -> new RuntimeException("Project not found"));
+                .orElseThrow(() -> new RuntimeException("Project not found with ID: " + dto.getProjectId()));
+        
+
+        Employee employee = employeeRepository.findById(dto.getEmployeeId())
+                .orElseThrow(() -> new RuntimeException("Employee not found with ID: " + dto.getEmployeeId()));
+        
 
         Modules module = new Modules();
         module.setName(dto.getName());
+        module.setDescription(dto.getDescription());  
         module.setProject(project);
-
-        return mapToModulesResponse(modulesRepository.save(module));
+        module.setEmployee(employee); 
+        
+        
+        Modules savedModule = modulesRepository.save(module);
+        
+        System.out.println("✅ Module created successfully with ID: " + savedModule.getId());
+        
+        return mapToModulesResponse(savedModule);
     }
 
     @Transactional(readOnly = true)
@@ -166,6 +202,9 @@ public class ProjectService {
         ModulesResponse dto = new ModulesResponse();
         dto.setId(module.getId());
         dto.setName(module.getName());
+        dto.setDescription(module.getDescription());  
+        dto.setProjectId(module.getProject().getProjectId());  
+        dto.setEmployeeId(module.getEmployee().getId()); 
         return dto;
     }
 }

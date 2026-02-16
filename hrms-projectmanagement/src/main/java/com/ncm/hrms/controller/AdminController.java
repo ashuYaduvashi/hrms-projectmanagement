@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import com.ncm.hrms.entity.Employee;
+import com.ncm.hrms.dto.response.EmployeeResponse;
 import com.ncm.hrms.service.AdminService;
 
 @RestController
@@ -16,7 +16,7 @@ public class AdminController {
     private AdminService adminService;
 
     @GetMapping("/employees")
-    public List<Employee> getAllEmployees() {
+    public List<EmployeeResponse> getAllEmployees() {
         return adminService.getAllEmployees();
     }
 }

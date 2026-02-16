@@ -11,7 +11,7 @@ import com.ncm.hrms.dto.response.LeaveResponseDto;
 import com.ncm.hrms.service.LeaveRequestService;
 
 @RestController
-@RequestMapping("/api/leaves")
+@RequestMapping("/leaves")
 @CrossOrigin
 public class LeaveRequestController {
 
