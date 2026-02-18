@@ -22,18 +22,18 @@ public class DataInitializer {
     @PostConstruct
     public void createAdmin() {
 
-        if (employeeRepository.findByEmail("admin123@gmail.com").isEmpty()) {
+        if (employeeRepository.findByEmail("admin1234@gmail.com").isEmpty()) {
 
             Employee admin = new Employee();
             admin.setName("Admin");
-            admin.setEmail("admin123@gmail.com");
-            admin.setPassword(passwordEncoder.encode("admin@123"));
+            admin.setEmail("admin1234@gmail.com");
+            admin.setPassword(passwordEncoder.encode("Admin@1234"));
             admin.setRole(EmpRole.ROLE_ADMIN);
             admin.setStatus(EmpStatus.ACTIVE);  
 
             employeeRepository.save(admin);
 
-            System.out.println("✅ Default Admin Created with ACTIVE status!");
+            System.out.println(" Default Admin Created with ACTIVE status!");
         }
     }
 }
