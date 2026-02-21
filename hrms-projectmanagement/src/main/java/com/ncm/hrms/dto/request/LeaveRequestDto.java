@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import com.ncm.hrms.enums.LeaveType;
 
 public class LeaveRequestDto {
+	private Long id;
 	 private LeaveType leaveType;
 	    private LocalDate startDate;
 	    private LocalDate endDate;
@@ -39,6 +40,12 @@ public class LeaveRequestDto {
 		}
 		public void setReason(String reason) {
 			this.reason = reason;
+		}
+		public Long getId() {
+			return id;
+		}
+		public void setId(Long id) {
+			this.id = id;
 		}
 	    
 	    

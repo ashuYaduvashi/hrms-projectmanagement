@@ -3,6 +3,7 @@ package com.ncm.hrms.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.ncm.hrms.dto.response.EmployeeResponse;
@@ -18,5 +19,10 @@ public class AdminController {
     @GetMapping("/employees")
     public List<EmployeeResponse> getAllEmployees() {
         return adminService.getAllEmployees();
+    }
+    
+    @GetMapping("/empById/{id}")
+    public ResponseEntity<EmployeeResponse> getEmployeeById(@PathVariable Long id){
+    	return ResponseEntity.ok(adminService.getEmployeeById(id));
     }
 }

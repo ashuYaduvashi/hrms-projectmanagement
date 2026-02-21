@@ -32,4 +32,9 @@ List<EmployeeAssignment> findByEmployeeIdAndProjectId(@Param("employeeId") Long 
 
 boolean existsByEmployeeAndProject(Employee employee, Project project);
 
+List<EmployeeAssignment> findByEmployee_Email(String email);
+
+
+
+
 }

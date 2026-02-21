@@ -19,7 +19,7 @@ public class AdminService {
     @Autowired
     private EmployeeRepository employeeRepository;
 
-    // Fetch all employees for admin
+   
     public List<EmployeeResponse> getAllEmployees() {
         return employeeRepository.findAll()
                 .stream()
@@ -27,7 +27,12 @@ public class AdminService {
                 .collect(Collectors.toList());
     }
     
-    // Map Employee entity to EmployeeResponse DTO
+    public EmployeeResponse getEmployeeById(Long id) {
+    	Employee emp=employeeRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Employee not found"));
+    	return mapEmployeeToResponse(emp);
+    }
+    
+   
     private EmployeeResponse mapEmployeeToResponse(Employee employee) {
         EmployeeResponse response = new EmployeeResponse();
 
@@ -41,11 +46,9 @@ public class AdminService {
         response.setStatus(employee.getStatus());
         response.setSameAsPermanent(employee.isSameAsPermanent());
 
-        // Directly set Address entities
         response.setCurrentAddress(employee.getCurrentAddress());
         response.setPermanentAddress(employee.getPermanentAddress());
 
-        // Map designation if present
         if (employee.getDesignation() != null) {
             DesignationResponse dr = new DesignationResponse();
             dr.setId(employee.getDesignation().getId());
@@ -53,22 +56,22 @@ public class AdminService {
             response.setDesignation(dr);
         }
 
-        // Map technologies if present
+        
         response.setTechnologies(
                 employee.getTechnologies() == null
                         ? Collections.emptyList()
                         : employee.getTechnologies().stream()
                             .map(t -> {
                                 EmployeeTechnologyResponse tr = new EmployeeTechnologyResponse();
-                                tr.setId(t.getId());
-                                tr.setTechnologyName(t.getTechnology().getName());
+                                tr.setTechnologyId(t.getTechnology().getId());
                                 tr.setExperienceInMonths(t.getExperienceInMonths());
                                 tr.setProficiency(t.getProficiency());
+                                tr.setUsageDescription(t.getUsageDescription());
                                 return tr;
                             }).collect(Collectors.toList())
         );
 
-        // Directly set assignments and leave requests
+       
         response.setAssignments(employee.getAssignments());
         response.setLeaveRequests(employee.getLeaveRequests());
 

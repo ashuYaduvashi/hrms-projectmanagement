@@ -21,6 +21,12 @@ public class EmployeeAssignmentResponse {
     private LocalDate assignedDate;
     private BigDecimal hoursWorked;
     private ProjectStatus projectStatus;
+    
+    private LocalDate projectStartDate;
+    private LocalDate projectEndDate;
+    
+    private String projectDescription;
+    private String moduledescription;
 
     public EmployeeAssignmentResponse() {
     }
@@ -123,4 +129,38 @@ public class EmployeeAssignmentResponse {
     public void setProjectStatus(ProjectStatus projectStatus) {
         this.projectStatus = projectStatus;
     }
+
+	public LocalDate getProjectStartDate() {
+		return projectStartDate;
+	}
+
+	public void setProjectStartDate(LocalDate projectStartDate) {
+		this.projectStartDate = projectStartDate;
+	}
+
+	public LocalDate getProjectEndDate() {
+		return projectEndDate;
+	}
+
+	public void setProjectEndDate(LocalDate projectEndDate) {
+		this.projectEndDate = projectEndDate;
+	}
+
+	public String getProjectDescription() {
+		return projectDescription;
+	}
+
+	public void setProjectDescription(String projectDescription) {
+		this.projectDescription = projectDescription;
+	}
+
+	public String getModuledescription() {
+		return moduledescription;
+	}
+
+	public void setModuledescription(String moduledescription) {
+		this.moduledescription = moduledescription;
+	}
+    
+    
 }

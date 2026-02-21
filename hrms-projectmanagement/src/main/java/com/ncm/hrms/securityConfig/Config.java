@@ -33,9 +33,9 @@ public class Config {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        http
-            .cors(cors -> {})
-            .csrf(csrf -> csrf.disable())
+        
+    	http.cors(cors -> {})
+    	    .csrf(csrf -> csrf.disable())
             .sessionManagement(session ->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
@@ -43,15 +43,24 @@ public class Config {
                 .requestMatchers("/auth/**").permitAll()
 
                 .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
-                .requestMatchers("/leaves/**")
+                .requestMatchers("/leaves" , "/leaves/**")
                    .hasAnyAuthority("ROLE_ADMIN","ROLE_EMPLOYEE")
                 .requestMatchers("/projects/**","/technologies/**")
-                    .hasAnyAuthority("ROLE_ADMIN", "ROLE_MANAGER")
+                    .hasAnyAuthority("ROLE_ADMIN", "ROLE_EMPLOYEE")
+                    .requestMatchers("/employee/all","/assignProjectToEmp")
+                    .hasAuthority("ROLE_ADMIN")
                 .requestMatchers("/employee/**")
                     .hasAuthority("ROLE_EMPLOYEE")
-
+                    
+                    .requestMatchers("/assignProjectToEmp/byEmail")
+                    .hasAuthority("ROLE_EMPLOYEE")
+                
+         
                 .anyRequest().authenticated()
             );
+    	
+//    	http.formLogin(login->login.permitAll());
+	
 
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 

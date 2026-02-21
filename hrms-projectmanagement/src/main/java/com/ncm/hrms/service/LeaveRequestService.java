@@ -3,6 +3,8 @@ package com.ncm.hrms.service;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -66,6 +68,7 @@ public class LeaveRequestService {
 
 
         leaveRequest.setLeaveStatus(LeaveStatus.APPROVED);
+        
         return mapToResponseDto(leaveRequestRepository.save(leaveRequest));
     }
 
@@ -83,6 +86,15 @@ public class LeaveRequestService {
         leaveRequest.setLeaveStatus(LeaveStatus.REJECTED);
         return mapToResponseDto(leaveRequestRepository.save(leaveRequest));
     }
+    
+    public List<LeaveResponseDto> getAllLeaves(){
+    	List<LeaveRequest> leaves = leaveRequestRepository.findAll();
+
+        return leaves.stream()
+                .map(this::mapToResponseDto)
+                .collect(Collectors.toList());
+    	
+    }
 
     
     private LeaveResponseDto mapToResponseDto(LeaveRequest leaveRequest) {
@@ -96,7 +108,8 @@ public class LeaveRequestService {
         dto.setReason(leaveRequest.getReason());
         dto.setLeaveStatus(leaveRequest.getLeaveStatus());
         dto.setAppliedDate(leaveRequest.getAppliedDate());
-
+        dto.setEmployeeId(leaveRequest.getEmployee().getId());
+        dto.setEmployeeName(leaveRequest.getEmployee().getName());
         return dto;
     }
 }

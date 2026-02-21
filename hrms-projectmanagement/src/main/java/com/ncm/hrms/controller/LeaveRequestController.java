@@ -1,5 +1,7 @@
 package com.ncm.hrms.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -29,6 +31,11 @@ public class LeaveRequestController {
         String email = authentication.getName();
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(leaveRequestService.applyLeave(email, dto));
+    }
+    
+    @GetMapping
+    public ResponseEntity<List<LeaveResponseDto>> getAllLeaves() {
+        return ResponseEntity.ok(leaveRequestService.getAllLeaves());
     }
 
     @PreAuthorize("hasRole('MANAGER') or hasRole('ADMIN')")

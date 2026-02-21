@@ -3,56 +3,100 @@ package com.ncm.hrms.dto.response;
 import com.ncm.hrms.enums.ProficiencyLevel;
 
 public class EmployeeTechnologyResponse {
-	private Long id;
+	
+	   private Long technologyId;
+	   private String technologyName;
+	   private Long employeeId;
+	    private Integer experienceInMonths;
+	    private ProficiencyLevel proficiency;
+	    private String usageDescription;
 
-    private Long technologyId;
-    private String technologyName;
+	   
 
-    private int experienceInMonths;
-    private ProficiencyLevel proficiency;
 
-    public EmployeeTechnologyResponse() {
-    }
 
-	public Long getId() {
-		return id;
-	}
+		public EmployeeTechnologyResponse() {
+			super();
+		}
+		
+		
+		
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+		public EmployeeTechnologyResponse(Long technologyId, String technologyName, Long employeeId,
+				Integer experienceInMonths, ProficiencyLevel proficiency, String usageDescription) {
+			super();
+			this.technologyId = technologyId;
+			this.technologyName = technologyName;
+			this.employeeId = employeeId;
+			this.experienceInMonths = experienceInMonths;
+			this.proficiency = proficiency;
+			this.usageDescription = usageDescription;
+		}
 
-	public Long getTechnologyId() {
-		return technologyId;
-	}
 
-	public void setTechnologyId(Long technologyId) {
-		this.technologyId = technologyId;
-	}
+		public Long getTechnologyId() {
+			return technologyId;
+		}
 
-	public String getTechnologyName() {
-		return technologyName;
-	}
+		public void setTechnologyId(Long technologyId) {
+			this.technologyId = technologyId;
+		}
 
-	public void setTechnologyName(String technologyName) {
-		this.technologyName = technologyName;
-	}
+		public Integer getExperienceInMonths() {
+			return experienceInMonths;
+		}
 
-	public int getExperienceInMonths() {
-		return experienceInMonths;
-	}
+		public void setExperienceInMonths(Integer experienceInMonths) {
+			this.experienceInMonths = experienceInMonths;
+		}
 
-	public void setExperienceInMonths(int experienceInMonths) {
-		this.experienceInMonths = experienceInMonths;
-	}
+		
+		public ProficiencyLevel getProficiency() {
+			return proficiency;
+		}
 
-	public ProficiencyLevel getProficiency() {
-		return proficiency;
-	}
+		public void setProficiency(ProficiencyLevel proficiency) {
+			this.proficiency = proficiency;
+		}
 
-	public void setProficiency(ProficiencyLevel proficiency) {
-		this.proficiency = proficiency;
-	}
-    
-    
+
+
+		public Long getEmployeeId() {
+			return employeeId;
+		}
+
+
+
+		public void setEmployeeId(Long employeeId) {
+			this.employeeId = employeeId;
+		}
+
+
+
+		public String getUsageDescription() {
+			return usageDescription;
+		}
+
+
+
+		public void setUsageDescription(String usageDescription) {
+			this.usageDescription = usageDescription;
+		}
+
+
+
+
+		public String getTechnologyName() {
+			return technologyName;
+		}
+
+
+
+
+		public void setTechnologyName(String technologyName) {
+			this.technologyName = technologyName;
+		}
+		
+		
+
 }

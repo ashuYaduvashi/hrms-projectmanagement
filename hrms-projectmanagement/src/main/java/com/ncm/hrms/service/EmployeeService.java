@@ -19,16 +19,20 @@ import com.ncm.hrms.entity.Employee;
 import com.ncm.hrms.repository.DesignationRepository;
 import com.ncm.hrms.repository.EmployeeRepository;
 
+
 @Service
 public class EmployeeService {
 
     private final EmployeeRepository employeeRepository;
     private final DesignationRepository designationRepository;
+   
 
     public EmployeeService(EmployeeRepository employeeRepository,
-                           DesignationRepository designationRepository) {
+                           DesignationRepository designationRepository 
+                        ) {
         this.employeeRepository = employeeRepository;
         this.designationRepository = designationRepository;
+   
     }
 
  
@@ -67,6 +71,10 @@ public class EmployeeService {
                 .map(this::mapEmployeeToResponse)
                 .collect(Collectors.toList());
     }
+    
+  
+
+   
 
    
 
@@ -125,10 +133,11 @@ public class EmployeeService {
                         : employee.getTechnologies().stream()
                             .map(t -> {
                                 EmployeeTechnologyResponse tr = new EmployeeTechnologyResponse();
-                                tr.setId(t.getId());
+                                tr.setTechnologyId(t.getTechnology().getId());
                                 tr.setTechnologyName(t.getTechnology().getName());
                                 tr.setExperienceInMonths(t.getExperienceInMonths());
                                 tr.setProficiency(t.getProficiency());
+                                tr.setUsageDescription(t.getUsageDescription());
                                 return tr;
                             }).collect(Collectors.toList())
         );
