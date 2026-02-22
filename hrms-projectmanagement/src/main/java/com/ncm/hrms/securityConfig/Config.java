@@ -49,8 +49,8 @@ public class Config {
                     .hasAnyAuthority("ROLE_ADMIN", "ROLE_EMPLOYEE")
                     .requestMatchers("/employee/all","/assignProjectToEmp")
                     .hasAuthority("ROLE_ADMIN")
-                .requestMatchers("/employee/**")
-                    .hasAuthority("ROLE_EMPLOYEE")
+                .requestMatchers("/employee/**","/designations","/designations/**")
+                    .hasAnyAuthority("ROLE_EMPLOYEE","ROLE_ADMIN")
                     
                     .requestMatchers("/assignProjectToEmp/byEmail")
                     .hasAuthority("ROLE_EMPLOYEE")

@@ -53,7 +53,7 @@ public class AuthService {
         Employee emp = employeeRepository.findByEmail(email)
                 .orElseThrow();
 
-        return jwtUtil.generateToken(email, emp.getRole().name());
+        return jwtUtil.generateToken(email, emp.getRole().name(), emp.getName());
     }
 
 
