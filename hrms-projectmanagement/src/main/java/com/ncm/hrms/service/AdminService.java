@@ -4,23 +4,38 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 
+import com.ncm.hrms.dto.common.AddressDto;
+import com.ncm.hrms.dto.request.EmployeeRequest;
 import com.ncm.hrms.dto.response.DesignationResponse;
 import com.ncm.hrms.dto.response.EmployeeResponse;
 import com.ncm.hrms.dto.response.EmployeeTechnologyResponse;
+import com.ncm.hrms.entity.Address;
+import com.ncm.hrms.entity.Designation;
 import com.ncm.hrms.entity.Employee;
+import com.ncm.hrms.repository.DesignationRepository;
 import com.ncm.hrms.repository.EmployeeRepository;
 
 @Service
 public class AdminService {
 
-    @Autowired
-    private EmployeeRepository employeeRepository;
-
    
-    public List<EmployeeResponse> getAllEmployees() {
+    private EmployeeRepository employeeRepository;
+    private DesignationRepository desigRepo;
+
+    
+    
+   
+    public AdminService(EmployeeRepository employeeRepository, DesignationRepository desigRepo) {
+		super();
+		this.employeeRepository = employeeRepository;
+		this.desigRepo = desigRepo;
+	}
+
+    
+	public List<EmployeeResponse> getAllEmployees() {
         return employeeRepository.findAll()
                 .stream()
                 .map(this::mapEmployeeToResponse)
@@ -30,6 +45,39 @@ public class AdminService {
     public EmployeeResponse getEmployeeById(Long id) {
     	Employee emp=employeeRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Employee not found"));
     	return mapEmployeeToResponse(emp);
+    }
+    
+    
+    
+    public EmployeeResponse updateEmployee(Long id, EmployeeRequest request) {
+
+        Employee employee = employeeRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Employee not found"));
+
+      
+        employee.setName(request.getName());
+        employee.setEmail(request.getEmail());
+        employee.setPhoneNumber(request.getPhoneNumber());
+        employee.setEducation(request.getEducation());
+        employee.setHireDate(request.getHireDate());
+        employee.setStatus(request.getStatus());
+        employee.setSameAsPermanent(request.isSameAsPermanent());
+
+       
+        employee.setCurrentAddress(toAddress(request.getCurrentAddress()));
+        employee.setPermanentAddress(toAddress(request.getPermanentAddress()));
+
+       
+        if (request.getDesignationId() != null) {
+            Designation designation = desigRepo.findById(request.getDesignationId())
+                    .orElseThrow(() -> new IllegalArgumentException("Designation not found"));
+            employee.setDesignation(designation);
+        }
+
+        
+        Employee updatedEmployee = employeeRepository.save(employee);
+
+        return mapEmployeeToResponse(updatedEmployee);
     }
     
    
@@ -76,5 +124,19 @@ public class AdminService {
         response.setLeaveRequests(employee.getLeaveRequests());
 
         return response;
+    }
+    
+    private Address toAddress(AddressDto dto) {
+        if (dto == null) return null;
+
+        Address address = new Address();
+        address.setAddressLine1(dto.getAddressLine1());
+        address.setAddressLine2(dto.getAddressLine2());
+        address.setCity(dto.getCity());
+        address.setDistrict(dto.getDistrict());
+        address.setState(dto.getState());
+        address.setCountry(dto.getCountry());
+        address.setPincode(dto.getPincode());
+        return address;
     }
 }

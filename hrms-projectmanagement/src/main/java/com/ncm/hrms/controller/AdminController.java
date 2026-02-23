@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.ncm.hrms.dto.request.EmployeeRequest;
 import com.ncm.hrms.dto.response.EmployeeResponse;
 import com.ncm.hrms.service.AdminService;
 
@@ -24,5 +25,12 @@ public class AdminController {
     @GetMapping("/empById/{id}")
     public ResponseEntity<EmployeeResponse> getEmployeeById(@PathVariable Long id){
     	return ResponseEntity.ok(adminService.getEmployeeById(id));
+    }
+    
+    @PutMapping("/updateEmp/{id}")
+    public EmployeeResponse updateEmployee(
+            @PathVariable Long id,
+            @RequestBody EmployeeRequest request) {
+        return adminService.updateEmployee(id, request);
     }
 }
