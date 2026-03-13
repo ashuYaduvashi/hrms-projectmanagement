@@ -54,12 +54,15 @@ public class Employee {
 	
 	@Past
 	private LocalDate dateOfBirth;
+	
+	private LocalDateTime lastLogin;
 
 
 	@ManyToOne
 	@JsonIgnoreProperties({ "employees", "hibernateLazyInitializer", "handler" })
 	private Designation designation;
 
+	@Column(name = "hire_date")
 	private LocalDate hireDate;
 
 	@CreationTimestamp
@@ -99,7 +102,23 @@ public class Employee {
 	@OneToMany(mappedBy = "employee", cascade = { CascadeType.PERSIST, CascadeType.MERGE }, orphanRemoval = false)
 	@JsonIgnoreProperties({ "employee" })
 	private List<LeaveRequest> leaveRequests = new ArrayList<>();
+	
+	@ManyToOne
+	@JsonIgnoreProperties({"employees"})
+	private Shift shift;
 
+	@OneToMany(mappedBy = "employee",cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	@JsonIgnoreProperties({"employee"})
+	private List<Attendance> attendances = new ArrayList<>();
+
+	@OneToMany(mappedBy = "employee",cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	@JsonIgnoreProperties({"employee"})
+	private List<AttendanceLog> attendanceLogs = new ArrayList<>();
+	
+	@OneToMany(mappedBy = "employee",cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	@JsonIgnoreProperties({"employee"})
+    private List<Document> document=new ArrayList<>();
+	
 	public Employee() {
 		super();
 	}
@@ -285,4 +304,49 @@ public class Employee {
 	public void setLeaveRequests(List<LeaveRequest> leaveRequests) {
 		this.leaveRequests = leaveRequests;
 	}
+
+	public LocalDate getDateOfBirth() {
+		return dateOfBirth;
+	}
+
+	public void setDateOfBirth(LocalDate dateOfBirth) {
+		this.dateOfBirth = dateOfBirth;
+	}
+
+	public LocalDateTime getLastLogin() {
+		return lastLogin;
+	}
+
+	public void setLastLogin(LocalDateTime lastLogin) {
+		this.lastLogin = lastLogin;
+	}
+
+	public Shift getShift() {
+		return shift;
+	}
+
+	public void setShift(Shift shift) {
+		this.shift = shift;
+	}
+
+	public List<Attendance> getAttendances() {
+		return attendances;
+	}
+
+	public void setAttendances(List<Attendance> attendances) {
+		this.attendances = attendances;
+	}
+
+	public List<AttendanceLog> getAttendanceLogs() {
+		return attendanceLogs;
+	}
+
+	public void setAttendanceLogs(List<AttendanceLog> attendanceLogs) {
+		this.attendanceLogs = attendanceLogs;
+	}
+
+	
+	
+	
+	
 }

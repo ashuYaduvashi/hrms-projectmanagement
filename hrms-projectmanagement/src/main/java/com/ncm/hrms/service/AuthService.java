@@ -1,5 +1,8 @@
 package com.ncm.hrms.service;
 
+
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -52,8 +55,14 @@ public class AuthService {
 
         Employee emp = employeeRepository.findByEmail(email)
                 .orElseThrow();
+        
+         LocalDateTime previousLastLogin = emp.getLastLogin();
+         
+         emp.setLastLogin(LocalDateTime.now());
+         
+         employeeRepository.save(emp);
 
-        return jwtUtil.generateToken(email, emp.getRole().name(), emp.getName());
+        return jwtUtil.generateToken(email, emp.getRole().name(), emp.getName(),previousLastLogin,emp.getId());
     }
 
 

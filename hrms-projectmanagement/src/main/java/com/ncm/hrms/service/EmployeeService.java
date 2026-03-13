@@ -58,6 +58,8 @@ public class EmployeeService {
 
         Employee employee = employeeRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("Employee not found"));
+        
+        System.out.println("Hire Date from entity: " + employee.getHireDate());
 
         return mapEmployeeToResponse(employee);
     }
@@ -84,6 +86,7 @@ public class EmployeeService {
         employee.setPhoneNumber(request.getPhoneNumber());
         employee.setEducation(request.getEducation());
         employee.setHireDate(request.getHireDate());
+        employee.setDateOfBirth(request.getDateOfBirth());
         employee.setSameAsPermanent(request.isSameAsPermanent());
 
         if (request.getStatus() != null) {
@@ -113,6 +116,7 @@ public class EmployeeService {
         response.setPhoneNumber(employee.getPhoneNumber());
         response.setEducation(employee.getEducation());
         response.setHireDate(employee.getHireDate());
+        response.setDateOfBirth(employee.getDateOfBirth());
         response.setCreatedAt(employee.getCreatedAt());
         response.setStatus(employee.getStatus());
         response.setSameAsPermanent(employee.isSameAsPermanent());

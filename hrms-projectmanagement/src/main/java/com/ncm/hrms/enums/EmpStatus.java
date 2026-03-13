@@ -4,5 +4,6 @@ public enum EmpStatus {
 	ACTIVE,
 	INACTIVE,
 	ONHOLD,
+	RESIGNED,
 	TERMINATED
 }

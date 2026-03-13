@@ -141,4 +141,6 @@ public class Project {
 	public void setAssignments(List<EmployeeAssignment> assignments) {
 		this.assignments = assignments;
 	}
+
+	
 }

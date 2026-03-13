@@ -149,4 +149,8 @@ public class LeaveRequest {
 	public void setAppliedDate(LocalDate appliedDate) {
 		this.appliedDate = appliedDate;
 	}
+
+
+	
+	
 }

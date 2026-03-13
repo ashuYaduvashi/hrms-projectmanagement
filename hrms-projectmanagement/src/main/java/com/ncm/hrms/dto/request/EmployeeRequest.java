@@ -1,3 +1,4 @@
+
 package com.ncm.hrms.dto.request;
 
 import java.time.LocalDate;
@@ -19,6 +20,7 @@ public class EmployeeRequest {
     private Long designationId;
 
     private LocalDate hireDate;
+    private LocalDate dateOfBirth;
 
     private AddressDto currentAddress;
     private AddressDto permanentAddress;
@@ -32,6 +34,8 @@ public class EmployeeRequest {
     private List<EmployeeAssignment> assignments;
     
     private List<LeaveRequest> leaveRequests ;
+    
+    private Long shiftId;
 
 	public String getName() {
 		return name;
@@ -145,8 +149,26 @@ public class EmployeeRequest {
 	public void setLeaveRequests(List<LeaveRequest> leaveRequests) {
 		this.leaveRequests = leaveRequests;
 	}
+
+	public LocalDate getDateOfBirth() {
+		return dateOfBirth;
+	}
+
+	public void setDateOfBirth(LocalDate dateOfBirth) {
+		this.dateOfBirth = dateOfBirth;
+	}
+
+	public Long getShiftId() {
+		return shiftId;
+	}
+
+	public void setShiftId(Long shiftId) {
+		this.shiftId = shiftId;
+	}
+
+	
     
-    
+        
 
     
 }

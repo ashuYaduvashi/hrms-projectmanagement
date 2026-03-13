@@ -31,13 +31,52 @@ public class LeaveRequestService {
         this.employeeRepository = employeeRepository;
     }
 
+//    public LeaveResponseDto applyLeave(String employeeEmail, LeaveRequestDto dto) {
+//
+//        Employee employee = employeeRepository.findByEmail(employeeEmail)
+//                .orElseThrow(() -> new IllegalArgumentException("Employee not found"));
+//        
+//           System.out.println("Employee Details: " + employee);
+//        if (dto.getEndDate().isBefore(dto.getStartDate())) {
+//            throw new IllegalArgumentException("End date cannot be before start date");
+//        }
+//
+//        long days = ChronoUnit.DAYS.between(dto.getStartDate(), dto.getEndDate()) + 1;
+//
+//        LeaveRequest leaveRequest = new LeaveRequest();
+//        leaveRequest.setEmployee(employee);
+//        leaveRequest.setLeaveType(dto.getLeaveType());
+//        leaveRequest.setStartDate(dto.getStartDate());
+//        leaveRequest.setEndDate(dto.getEndDate());
+//        leaveRequest.setDaysRequested((int) days);
+//        leaveRequest.setReason(dto.getReason());
+//        leaveRequest.setLeaveStatus(LeaveStatus.PENDING);
+//        leaveRequest.setAppliedDate(LocalDate.now());
+//
+//        return mapToResponseDto(leaveRequestRepository.save(leaveRequest));
+//    }
+    
+    
     public LeaveResponseDto applyLeave(String employeeEmail, LeaveRequestDto dto) {
 
         Employee employee = employeeRepository.findByEmail(employeeEmail)
                 .orElseThrow(() -> new IllegalArgumentException("Employee not found"));
-
+        
+           
         if (dto.getEndDate().isBefore(dto.getStartDate())) {
             throw new IllegalArgumentException("End date cannot be before start date");
+        }
+          
+        LeaveRequest leaveReq =
+                leaveRequestRepository.findByEmployee_IdAndAppliedDate(
+                        employee.getId(),
+                        LocalDate.now()
+                );
+
+        if (leaveReq != null && leaveReq.getLeaveStatus() != LeaveStatus.REJECTED) {
+            throw new IllegalArgumentException(
+                    "You cannot apply more than one leave in a day"
+            );
         }
 
         long days = ChronoUnit.DAYS.between(dto.getStartDate(), dto.getEndDate()) + 1;

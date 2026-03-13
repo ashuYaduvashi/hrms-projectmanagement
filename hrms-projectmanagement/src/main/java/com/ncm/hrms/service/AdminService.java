@@ -1,10 +1,11 @@
 package com.ncm.hrms.service;
 
 import java.util.Collections;
-import java.util.List;
+//import java.util.List;
 import java.util.stream.Collectors;
 
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.ncm.hrms.dto.common.AddressDto;
@@ -15,8 +16,15 @@ import com.ncm.hrms.dto.response.EmployeeTechnologyResponse;
 import com.ncm.hrms.entity.Address;
 import com.ncm.hrms.entity.Designation;
 import com.ncm.hrms.entity.Employee;
+import com.ncm.hrms.entity.Shift;
 import com.ncm.hrms.repository.DesignationRepository;
 import com.ncm.hrms.repository.EmployeeRepository;
+import com.ncm.hrms.repository.ShiftRepository;
+
+import org.springframework.data.jpa.domain.Specification;
+import com.ncm.hrms.specification.EmployeeSpecification;
+
+
 
 @Service
 public class AdminService {
@@ -24,23 +32,48 @@ public class AdminService {
    
     private EmployeeRepository employeeRepository;
     private DesignationRepository desigRepo;
-
+    private ShiftRepository shiftRepo;
     
     
    
-    public AdminService(EmployeeRepository employeeRepository, DesignationRepository desigRepo) {
+    public AdminService(EmployeeRepository employeeRepository, DesignationRepository desigRepo,ShiftRepository shiftRepo) {
 		super();
 		this.employeeRepository = employeeRepository;
 		this.desigRepo = desigRepo;
+		this.shiftRepo = shiftRepo;
 	}
 
     
-	public List<EmployeeResponse> getAllEmployees() {
-        return employeeRepository.findAll()
-                .stream()
-                .map(this::mapEmployeeToResponse)
-                .collect(Collectors.toList());
+//	public List<EmployeeResponse> getAllEmployees() {
+//        return employeeRepository.findAll()
+//                .stream()
+//                .map(this::mapEmployeeToResponse)
+//                .collect(Collectors.toList());
+//    }
+    
+//    Basic Pagination without filter
+//    public Page<EmployeeResponse> getAllEmployees(Pageable pageable) {
+//        return employeeRepository.findAll(pageable)
+//                .map(this::mapEmployeeToResponse);
+//    }
+    
+    
+    //Pagination with filter
+    public Page<EmployeeResponse> getAllEmployees(
+            String search,
+            Pageable pageable
+    ) {
+
+        Specification<Employee> spec =
+                EmployeeSpecification.globalSearch(search);
+
+        return employeeRepository.findAll(spec, pageable)
+                .map(this::mapEmployeeToResponse);
     }
+    
+    
+    
+    //-------------------------------------------------------------------------------------------------------------------------
     
     public EmployeeResponse getEmployeeById(Long id) {
     	Employee emp=employeeRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Employee not found"));
@@ -73,7 +106,12 @@ public class AdminService {
                     .orElseThrow(() -> new IllegalArgumentException("Designation not found"));
             employee.setDesignation(designation);
         }
-
+        
+        if(request.getShiftId() != null) {
+        	Shift shift = shiftRepo.findById(request.getShiftId())
+        			.orElseThrow(() -> new IllegalArgumentException("Shift not found"));
+        	employee.setShift(shift);
+        }
         
         Employee updatedEmployee = employeeRepository.save(employee);
 

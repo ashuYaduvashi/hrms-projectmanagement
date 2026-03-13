@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -11,8 +12,17 @@ import org.springframework.stereotype.Repository;
 import com.ncm.hrms.entity.Employee;
 import com.ncm.hrms.enums.EmpStatus;
 
+
+
+
+
+
+//we use here JpaSpecification because It allows dynamic filtering
+//We can filter by name, phone, email, status optionally
+//we can use param also but not dynamic
+
 @Repository
-	public interface EmployeeRepository extends JpaRepository<Employee, Long> {
+	public interface EmployeeRepository extends JpaRepository<Employee, Long>, JpaSpecificationExecutor<Employee> {
 
 	    Optional<Employee> findByEmail(String email);
 

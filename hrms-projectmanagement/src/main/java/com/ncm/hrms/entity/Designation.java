@@ -62,6 +62,7 @@ public class Designation {
 	public void setBaseSalary(Double baseSalary) {
 		this.baseSalary = baseSalary;
 	}
+
 	
 	
 

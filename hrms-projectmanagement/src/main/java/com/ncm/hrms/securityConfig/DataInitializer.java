@@ -1,4 +1,4 @@
-package com.ncm.hrms.securityConfig;
+    package com.ncm.hrms.securityConfig;
 
 import com.ncm.hrms.entity.Employee;
 import com.ncm.hrms.enums.EmpRole;

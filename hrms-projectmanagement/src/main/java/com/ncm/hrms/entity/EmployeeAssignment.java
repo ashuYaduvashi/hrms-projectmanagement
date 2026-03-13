@@ -117,4 +117,7 @@ public class EmployeeAssignment {
 	public void setProjectStatus(ProjectStatus projectStatus) {
 		this.projectStatus = projectStatus;
 	}
+
+	
+	
 }

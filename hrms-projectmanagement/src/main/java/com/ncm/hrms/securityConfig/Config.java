@@ -41,21 +41,22 @@ public class Config {
             )
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/auth/**").permitAll()
-
-                .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
+                .requestMatchers("/admin/**")
+                   .hasAuthority("ROLE_ADMIN")
                 .requestMatchers("/leaves" , "/leaves/**")
                    .hasAnyAuthority("ROLE_ADMIN","ROLE_EMPLOYEE")
                 .requestMatchers("/projects/**","/technologies/**")
                     .hasAnyAuthority("ROLE_ADMIN", "ROLE_EMPLOYEE")
-                    .requestMatchers("/employee/all","/assignProjectToEmp")
+                .requestMatchers("/employee/all","/assignProjectToEmp")
                     .hasAuthority("ROLE_ADMIN")
                 .requestMatchers("/employee/**","/designations","/designations/**")
                     .hasAnyAuthority("ROLE_EMPLOYEE","ROLE_ADMIN")
-                    
-                    .requestMatchers("/assignProjectToEmp/byEmail")
+                .requestMatchers("/assignProjectToEmp/byEmail")
                     .hasAuthority("ROLE_EMPLOYEE")
-                
-         
+                .requestMatchers("/api/attendance/log")
+                   .hasAuthority("ROLE_EMPLOYEE")
+                .requestMatchers("/api/shifts","/api/shifts/**")
+                   .hasAuthority("ROLE_ADMIN")
                 .anyRequest().authenticated()
             );
     	

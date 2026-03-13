@@ -33,6 +33,7 @@ public class AuthController {
                 "token", token
         ));
     }
+    
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {

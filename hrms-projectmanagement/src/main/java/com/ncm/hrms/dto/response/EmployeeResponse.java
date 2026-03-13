@@ -23,6 +23,7 @@ public class EmployeeResponse {
     private DesignationResponse designation;
 
     private LocalDate hireDate;
+    private LocalDate dateOfBirth;
     private LocalDateTime createdAt;
 
     private Address currentAddress;
@@ -164,6 +165,14 @@ public class EmployeeResponse {
 
 	public void setModules(List<Modules> modules) {
 		this.modules = modules;
+	}
+
+	public LocalDate getDateOfBirth() {
+		return dateOfBirth;
+	}
+
+	public void setDateOfBirth(LocalDate dateOfBirth) {
+		this.dateOfBirth = dateOfBirth;
 	}
 
 

@@ -1,5 +1,6 @@
 package com.ncm.hrms.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +24,9 @@ Optional<Employee> findByLeaveStatus(LeaveStatus pending);
 
 
 List<LeaveRequest> findByEmployeeAndLeaveStatus(Employee employee, LeaveStatus status);
+
+
+LeaveRequest findByEmployee_IdAndAppliedDate(Long employeeId , LocalDate appliedDate);
 
 }
 

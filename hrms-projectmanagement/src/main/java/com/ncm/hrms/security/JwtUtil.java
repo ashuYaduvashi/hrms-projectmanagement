@@ -5,6 +5,7 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Component
@@ -16,12 +17,14 @@ public class JwtUtil {
         return Keys.hmacShaKeyFor(SECRET.getBytes());
     }
 
-    public String generateToken(String email, String role , String employeeName) {
+    public String generateToken(String email, String role , String employeeName ,LocalDateTime lastLogin,Long id) {
 
         return Jwts.builder()
                 .setSubject(email)
                 .claim("role", role)  
                 .claim("employeeName", employeeName) 
+                .claim( "employeeId", id)
+                .claim("lastLogin", lastLogin != null ? lastLogin.toString() : null)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
