@@ -47,11 +47,11 @@ public class Config {
                    .hasAnyAuthority("ROLE_ADMIN","ROLE_EMPLOYEE")
                 .requestMatchers("/projects/**","/technologies/**")
                     .hasAnyAuthority("ROLE_ADMIN", "ROLE_EMPLOYEE")
-                .requestMatchers("/employee/all","/assignProjectToEmp")
+                .requestMatchers("/employee/all","/employee-assignments")
                     .hasAuthority("ROLE_ADMIN")
                 .requestMatchers("/employee/**","/designations","/designations/**")
                     .hasAnyAuthority("ROLE_EMPLOYEE","ROLE_ADMIN")
-                .requestMatchers("/assignProjectToEmp/byEmail")
+                .requestMatchers("/employee-assignments/byEmail")
                     .hasAuthority("ROLE_EMPLOYEE")
                 .requestMatchers("/api/attendance/**")
                    .hasAuthority("ROLE_EMPLOYEE")
@@ -59,6 +59,8 @@ public class Config {
                    .hasAuthority("ROLE_ADMIN")
                 .requestMatchers("/api/documents/**")
                    .hasAnyAuthority("ROLE_EMPLOYEE","ROLE_ADMIN")
+                .requestMatchers("/notifications/**")
+                    .hasAnyAuthority("ROLE_EMPLOYEE","ROLE_ADMIN")
                 .anyRequest().authenticated()
             );
     	

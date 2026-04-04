@@ -43,6 +43,8 @@ import com.ncm.hrms.enums.EmpStatus;
 	    
 	    @Query("SELECT e FROM Employee e LEFT JOIN FETCH e.technologies LEFT JOIN FETCH e.assignments WHERE e.email = :email")
 	    Optional<Employee> findByEmailWithDetails(@Param("email") String email);
+	    
+	    
 
 	}
 

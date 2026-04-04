@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.ncm.hrms.dto.common.AllowedIpDto;
 import com.ncm.hrms.entity.AllowedIp;
+import com.ncm.hrms.exception.IpNotAllowedException;
 import com.ncm.hrms.repository.AllowedIpRepository;
 
 @Service
@@ -52,7 +53,7 @@ public class AllowedIpService {
         return allowedIpRepo
                 .findByIpAddressAndActiveTrue(ip)
                 .orElseThrow(() ->
-                        new RuntimeException("Access denied. IP not allowed: " + ip));
+                        new IpNotAllowedException("Access denied. IP not allowed: " + ip));
     }
 
     

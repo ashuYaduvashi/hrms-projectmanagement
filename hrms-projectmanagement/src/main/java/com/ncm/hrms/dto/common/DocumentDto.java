@@ -4,6 +4,8 @@ public class DocumentDto {
 	private Long id;
 	private String docName;
 	private Long employeeId;
+	private String employeeName;
+	private String designationTitle;
 	private String path;
 	private String docType;
 	private String contentType;
@@ -42,6 +44,18 @@ public class DocumentDto {
 	}
 	public void setContentType(String contentType) {
 		this.contentType = contentType;
+	}
+	public String getEmployeeName() {
+		return employeeName;
+	}
+	public void setEmployeeName(String employeeName) {
+		this.employeeName = employeeName;
+	}
+	public String getDesignationTitle() {
+		return designationTitle;
+	}
+	public void setDesignationTitle(String designationTitle) {
+		this.designationTitle = designationTitle;
 	}
 	
 	

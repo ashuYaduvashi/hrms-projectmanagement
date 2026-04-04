@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import com.ncm.hrms.dto.request.EmployeeRequest;
 import com.ncm.hrms.dto.request.EmployeeTechnologyRequest;
 import com.ncm.hrms.dto.response.EmployeeResponse;
+import com.ncm.hrms.dto.response.EmployeeTechnologyResponse;
 import com.ncm.hrms.service.EmployeeService;
 import com.ncm.hrms.service.EmployeeTechnologyService;
 
@@ -19,13 +20,15 @@ public class EmployeeController {
 
     private final EmployeeService employeeService;
     private final EmployeeTechnologyService empTechSer;
+   private final EmployeeTechnologyService employeeTechnologyService;
 
     
 
-    public EmployeeController(EmployeeService employeeService, EmployeeTechnologyService empTechSer) {
+    public EmployeeController(EmployeeService employeeService, EmployeeTechnologyService empTechSer,EmployeeTechnologyService employeeTechnologyService) {
 		super();
 		this.employeeService = employeeService;
 		this.empTechSer = empTechSer;
+		this.employeeTechnologyService=employeeTechnologyService;
 	}
 
 	@GetMapping("/profile")
@@ -54,6 +57,15 @@ public class EmployeeController {
         empTechSer.addTechnologyByEmail(email, request);
 
         return ResponseEntity.ok("Skill added");
+    }
+    
+    @GetMapping("/getEmpTechnology")
+    public List<EmployeeTechnologyResponse> getMySkills(Authentication auth) {
+        
+        String email = auth.getName();
+        
+       
+		return employeeTechnologyService.getSkillsByEmail(email);
     }
 
 }

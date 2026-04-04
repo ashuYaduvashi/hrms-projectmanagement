@@ -34,7 +34,9 @@ boolean existsByEmployeeAndProject(Employee employee, Project project);
 
 List<EmployeeAssignment> findByEmployee_Email(String email);
 
+//List<EmployeeAssignment> findByProjectIdAndModuleId(Long projectId, Long moduleId);
 
-
+List<EmployeeAssignment> 
+findByProject_ProjectIdAndModules_Id(Long projectId, Long moduleId);
 
 }

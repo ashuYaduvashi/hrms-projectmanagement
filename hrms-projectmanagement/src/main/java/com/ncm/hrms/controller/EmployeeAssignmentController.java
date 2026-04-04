@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ncm.hrms.dto.request.EmployeeAssignmentRequest;
@@ -16,7 +17,7 @@ import com.ncm.hrms.dto.response.EmployeeAssignmentResponse;
 import com.ncm.hrms.service.EmployeeAssignmentService;
 
 @RestController
-@RequestMapping("/assignProjectToEmp")
+@RequestMapping("/employee-assignments")
 public class EmployeeAssignmentController {
 	
 	private final EmployeeAssignmentService empAssignSer;
@@ -47,6 +48,12 @@ public class EmployeeAssignmentController {
     public ResponseEntity<List<EmployeeAssignmentResponse>> getEmpAssignProjectByEmail( Authentication authentication){
     	 String email = authentication.getName();
     	 return ResponseEntity.ok(empAssignSer.getEmpAssignProjectByEmail(email));
+    }
+    
+    @GetMapping("/assignments")
+    public ResponseEntity<List<EmployeeAssignmentResponse>> getAllEmpAssignByModuleAndProject(@RequestParam Long projectId , @RequestParam Long moduleId){
+    	return ResponseEntity.ok(empAssignSer.getAllEmpAssignProjectAndModule(projectId, moduleId));
+    			
     }
 
 }

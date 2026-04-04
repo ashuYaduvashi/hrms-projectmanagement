@@ -23,6 +23,7 @@ import com.ncm.hrms.dto.common.DocumentDto;
 import com.ncm.hrms.entity.Document;
 import com.ncm.hrms.entity.Employee;
 import com.ncm.hrms.enums.ContentType;
+import com.ncm.hrms.enums.EmpStatus;
 import com.ncm.hrms.repository.DocumentRepository;
 import com.ncm.hrms.repository.EmployeeRepository;
 
@@ -55,6 +56,10 @@ public class DocumentService {
 
         Employee emp = empRepo.findById(docDto.getEmployeeId())
                 .orElseThrow(() -> new RuntimeException("Employee not found with id: " + docDto.getEmployeeId()));
+        
+        if(emp.getStatus() != EmpStatus.ACTIVE) {
+        	throw new IllegalArgumentException("Employee is not active ");
+        }
 
         Document doc = dtoToDoc(docDto);
 
@@ -67,7 +72,21 @@ public class DocumentService {
         return docToDTO(doc);
     }
 
-   
+    public List<DocumentDto> getDocumentsByEmployeeId(Long employeeId) {
+    	
+    	Employee emp = empRepo.findById(employeeId)
+                .orElseThrow(() -> new RuntimeException("Employee not found with id: " + employeeId));
+        
+        if(emp.getStatus() != EmpStatus.ACTIVE) {
+        	throw new IllegalArgumentException("Employee is not active ");
+        }
+
+        List<Document> docs = docRepo.findByEmployeeId(employeeId);
+
+        return docs.stream()
+                   .map(this::docToDTO)
+                   .toList();
+    }
 
     public DocumentDto getDocumentById(Long id) {
 
@@ -77,17 +96,6 @@ public class DocumentService {
         return docToDTO(doc);
     }
 
-    
-  
-    public List<DocumentDto> getDocumentsByEmployeeId(Long employeeId) {
-
-        List<Document> docs = docRepo.findByEmployeeId(employeeId);
-
-        return docs.stream()
-                   .map(this::docToDTO)
-                   .toList();
-    }
-    
     
     public List<DocumentDto> getAllDocuments() {
 
@@ -111,6 +119,7 @@ public class DocumentService {
         docRepo.deleteById(id);
     }
 
+    
     public ResponseEntity<Resource> getFile(Long id, boolean download) throws IOException {
 
         Document doc = docRepo.findById(id)
@@ -162,6 +171,8 @@ public class DocumentService {
 
         if (doc.getEmployee() != null) {
             dto.setEmployeeId(doc.getEmployee().getId());
+            dto.setEmployeeName(doc.getEmployee().getName());
+            dto.setDesignationTitle(doc.getEmployee().getDesignation().getTitle());
         }
 
         return dto;

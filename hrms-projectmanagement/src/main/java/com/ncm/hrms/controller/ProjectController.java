@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 
 import com.ncm.hrms.dto.request.ModulesRequest;
 import com.ncm.hrms.dto.request.ProjectRequest;
-import com.ncm.hrms.dto.response.EmployeeAssignmentResponse;
 import com.ncm.hrms.dto.response.ModulesResponse;
 import com.ncm.hrms.dto.response.ProjectResponse;
 import com.ncm.hrms.service.ProjectService;
@@ -44,14 +43,14 @@ public class ProjectController {
     }
 
   
-    @PostMapping("/assign")
-    public EmployeeAssignmentResponse assignEmployee(
-            @RequestParam Long employeeId,
-            @RequestParam Long projectId,
-            @RequestParam Long moduleId) {
-
-        return projectService.assignEmployeeToProject(employeeId, projectId, moduleId);
-    }
+//    @PostMapping("/assign")
+//    public EmployeeAssignmentResponse assignEmployee(
+//            @RequestParam Long employeeId,
+//            @RequestParam Long projectId,
+//            @RequestParam Long moduleId) {
+//
+//        return projectService.assignEmployeeToProject(employeeId, projectId, moduleId);
+//    }
 
     @PostMapping("/modules")
     public ModulesResponse createModule(@RequestBody ModulesRequest dto) {

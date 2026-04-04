@@ -27,6 +27,9 @@ public class AuthService {
     private AuthenticationManager authenticationManager;
     
     @Autowired
+    private NotificationService notiSer;
+    
+    @Autowired
     private JwtUtil jwtUtil;
 
     public void register(RegisterRequest request) {
@@ -42,6 +45,15 @@ public class AuthService {
         emp.setRole(EmpRole.ROLE_EMPLOYEE);
 
         employeeRepository.save(emp);
+        try {
+        	Long adminId=5L;
+        	notiSer.createNotification(adminId, "New Employee Register "+emp.getName()+" and Request for activating account!!");
+        	
+        }
+        catch(Exception e) {
+        	System.out.println("Notification failed: " + e.getMessage());
+        }
+        
     }
 
 
@@ -49,12 +61,10 @@ public class AuthService {
 
     public String login(String email, String password) {
 
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(email, password)
-        );
+        authenticationManager.authenticate( new UsernamePasswordAuthenticationToken(email, password));
 
         Employee emp = employeeRepository.findByEmail(email)
-                .orElseThrow();
+                .orElseThrow(()->new IllegalArgumentException("Employee does not found by id: " + email));
         
          LocalDateTime previousLastLogin = emp.getLastLogin();
          

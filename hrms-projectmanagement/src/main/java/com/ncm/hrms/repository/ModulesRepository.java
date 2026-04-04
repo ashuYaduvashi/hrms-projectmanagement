@@ -11,4 +11,6 @@ public interface ModulesRepository extends JpaRepository<Modules, Long> {
     List<Modules> findByProjectProjectId(Long projectId);
 
     List<Modules> findByEmployeeId(Long employeeId);
+    
+  
 }

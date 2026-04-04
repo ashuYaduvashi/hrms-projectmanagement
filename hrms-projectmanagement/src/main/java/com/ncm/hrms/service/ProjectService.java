@@ -1,24 +1,23 @@
 package com.ncm.hrms.service;
 
 
-import java.time.LocalDate;
+
 import java.util.List;
 import java.util.stream.Collectors;
+
+
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ncm.hrms.dto.request.ModulesRequest;
 import com.ncm.hrms.dto.request.ProjectRequest;
-import com.ncm.hrms.dto.response.EmployeeAssignmentResponse;
 import com.ncm.hrms.dto.response.ModulesResponse;
 import com.ncm.hrms.dto.response.ProjectResponse;
 import com.ncm.hrms.entity.Employee;
-import com.ncm.hrms.entity.EmployeeAssignment;
 import com.ncm.hrms.entity.Modules;
 import com.ncm.hrms.entity.Project;
 import com.ncm.hrms.enums.ProjectStatus;
-import com.ncm.hrms.repository.EmployeeAssignmentRepository;
 import com.ncm.hrms.repository.EmployeeRepository;
 import com.ncm.hrms.repository.ModulesRepository;
 import com.ncm.hrms.repository.ProjectRepository;
@@ -27,21 +26,24 @@ import com.ncm.hrms.repository.ProjectRepository;
 @Service
 @Transactional
 public class ProjectService {
+	
+	
 
     private final ProjectRepository projectRepository;
     private final EmployeeRepository employeeRepository;
     private final ModulesRepository modulesRepository;
-    private final EmployeeAssignmentRepository assignmentRepository;
+//    private final EmployeeAssignmentRepository assignmentRepository;
+   
 
     public ProjectService(
             ProjectRepository projectRepository,
             EmployeeRepository employeeRepository,
-            ModulesRepository modulesRepository,
-            EmployeeAssignmentRepository assignmentRepository) {
+            ModulesRepository modulesRepository    
+           ) {
         this.projectRepository = projectRepository;
         this.employeeRepository = employeeRepository;
         this.modulesRepository = modulesRepository;
-        this.assignmentRepository = assignmentRepository;
+          
     }
 
  
@@ -84,37 +86,35 @@ public class ProjectService {
     }
 
    
-    public EmployeeAssignmentResponse assignEmployeeToProject(
-            Long employeeId,
-            Long projectId,
-            Long moduleId) {
-
-        Employee employee = employeeRepository.findById(employeeId)
-                .orElseThrow(() -> new RuntimeException("Employee not found"));
-
-        Project project = projectRepository.findById(projectId)
-                .orElseThrow(() -> new RuntimeException("Project not found"));
-
-        Modules module = modulesRepository.findById(moduleId)
-                .orElseThrow(() -> new RuntimeException("Module not found"));
-
-        if (!module.getProject().getProjectId().equals(project.getProjectId())) {
-            throw new IllegalStateException("Module does not belong to this project");
-        }
-
-        if (assignmentRepository.existsByEmployeeAndProject(employee, project)) {
-            throw new IllegalStateException("Employee already assigned to this project");
-        }
-
-        EmployeeAssignment assignment = new EmployeeAssignment();
-        assignment.setEmployee(employee);
-        assignment.setProject(project);
-        assignment.setModule(module);
-        assignment.setAssignedDate(LocalDate.now());
-        assignment.setProjectStatus(ProjectStatus.ACTIVE);
-
-        return mapToAssignmentResponse(assignmentRepository.save(assignment));
-    }
+//    public EmployeeAssignmentResponse assignEmployeeToProject(Long employeeId,Long projectId,Long moduleId) {
+//
+//        Employee employee = employeeRepository.findById(employeeId)
+//                .orElseThrow(() -> new RuntimeException("Employee not found"));
+//
+//        Project project = projectRepository.findById(projectId)
+//                .orElseThrow(() -> new RuntimeException("Project not found"));
+//
+//        Modules module = modulesRepository.findById(moduleId)
+//                .orElseThrow(() -> new RuntimeException("Module not found"));
+//
+//        if (!module.getProject().getProjectId().equals(project.getProjectId())) {
+//            throw new IllegalStateException("Module does not belong to this project");
+//        }
+//
+//        if (assignmentRepository.existsByEmployeeAndProject(employee, project)) {
+//            throw new IllegalStateException("Employee already assigned to this project");
+//        }
+//
+//        EmployeeAssignment assignment = new EmployeeAssignment();
+//        assignment.setEmployee(employee);
+//        assignment.setProject(project);
+//        assignment.setModule(module);
+//        assignment.setAssignedDate(LocalDate.now());
+//        assignment.setProjectStatus(ProjectStatus.ACTIVE);
+//        
+//      
+//        return mapToAssignmentResponse(assignmentRepository.save(assignment));
+//    }
 
   
 //    public ModulesResponse createModule(ModulesRequest dto) {
@@ -159,7 +159,7 @@ public class ProjectService {
         
         Modules savedModule = modulesRepository.save(module);
         
-        System.out.println("✅ Module created successfully with ID: " + savedModule.getId());
+        System.out.println(" Module created successfully with ID: " + savedModule.getId());
         
         return mapToModulesResponse(savedModule);
     }
@@ -184,19 +184,19 @@ public class ProjectService {
         return dto;
     }
 
-    private EmployeeAssignmentResponse mapToAssignmentResponse(EmployeeAssignment assignment) {
-        EmployeeAssignmentResponse dto = new EmployeeAssignmentResponse();
-        dto.setEmployeeId(assignment.getEmployee().getId());
-        dto.setEmployeeName(assignment.getEmployee().getName());
-        dto.setProjectId(assignment.getProject().getProjectId());
-        dto.setProjectName(assignment.getProject().getProjectName());
-        dto.setModuleName(
-                assignment.getModule() != null ? assignment.getModule().getName() : null
-        );
-        dto.setAssignedDate(assignment.getAssignedDate());
-        dto.setProjectStatus(assignment.getProjectStatus());
-        return dto;
-    }
+//    private EmployeeAssignmentResponse mapToAssignmentResponse(EmployeeAssignment assignment) {
+//        EmployeeAssignmentResponse dto = new EmployeeAssignmentResponse();
+//        dto.setEmployeeId(assignment.getEmployee().getId());
+//        dto.setEmployeeName(assignment.getEmployee().getName());
+//        dto.setProjectId(assignment.getProject().getProjectId());
+//        dto.setProjectName(assignment.getProject().getProjectName());
+//        dto.setModuleName(
+//                assignment.getModule() != null ? assignment.getModule().getName() : null
+//        );
+//        dto.setAssignedDate(assignment.getAssignedDate());
+//        dto.setProjectStatus(assignment.getProjectStatus());
+//        return dto;
+//    }
 
     private ModulesResponse mapToModulesResponse(Modules module) {
         ModulesResponse dto = new ModulesResponse();

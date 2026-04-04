@@ -1,7 +1,8 @@
 package com.ncm.hrms.service;
 
+
 import java.util.Collections;
-//import java.util.List;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
@@ -9,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.ncm.hrms.dto.common.AddressDto;
+import com.ncm.hrms.dto.common.EmployeeDropdownDto;
 import com.ncm.hrms.dto.request.EmployeeRequest;
 import com.ncm.hrms.dto.response.DesignationResponse;
 import com.ncm.hrms.dto.response.EmployeeResponse;
@@ -17,6 +19,7 @@ import com.ncm.hrms.entity.Address;
 import com.ncm.hrms.entity.Designation;
 import com.ncm.hrms.entity.Employee;
 import com.ncm.hrms.entity.Shift;
+import com.ncm.hrms.enums.EmpStatus;
 import com.ncm.hrms.repository.DesignationRepository;
 import com.ncm.hrms.repository.EmployeeRepository;
 import com.ncm.hrms.repository.ShiftRepository;
@@ -33,16 +36,29 @@ public class AdminService {
     private EmployeeRepository employeeRepository;
     private DesignationRepository desigRepo;
     private ShiftRepository shiftRepo;
+    private final NotificationService notiSer;
     
     
    
-    public AdminService(EmployeeRepository employeeRepository, DesignationRepository desigRepo,ShiftRepository shiftRepo) {
+    public AdminService(EmployeeRepository employeeRepository, DesignationRepository desigRepo,ShiftRepository shiftRepo, NotificationService notiSer) {
 		super();
 		this.employeeRepository = employeeRepository;
 		this.desigRepo = desigRepo;
 		this.shiftRepo = shiftRepo;
+		this.notiSer=notiSer;
 	}
 
+    
+    public List<EmployeeDropdownDto> getEmployeeDropdown() {
+        return employeeRepository.findAll()
+                .stream()
+                .filter(emp -> emp.getStatus() == EmpStatus.ACTIVE)
+                .map(emp -> new EmployeeDropdownDto(
+                        emp.getId(),
+                        emp.getName()
+                ))
+                .toList();
+    }
     
 //	public List<EmployeeResponse> getAllEmployees() {
 //        return employeeRepository.findAll()
@@ -114,9 +130,23 @@ public class AdminService {
         }
         
         Employee updatedEmployee = employeeRepository.save(employee);
+        try {
+        	notiSer.createNotification(id, "Your account is "+employee.getStatus()+" by admin");
+        }
+        catch(Exception e) {
+        	System.out.println("Notification failed with employee id"+id);
+        }
+        
 
         return mapEmployeeToResponse(updatedEmployee);
     }
+    
+    //================================================================================================================================
+    
+  
+  
+ 
+    
     
    
     private EmployeeResponse mapEmployeeToResponse(Employee employee) {

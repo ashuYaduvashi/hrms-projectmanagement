@@ -152,9 +152,7 @@ public class AttendanceService {
     }
 
 
-    private Attendance processAttendance(
-            Employee employee,
-            List<AttendanceLog> logs) {
+    private Attendance processAttendance(Employee employee,List<AttendanceLog> logs) {
 
         LocalDate today = LocalDate.now();
 
@@ -192,7 +190,9 @@ public class AttendanceService {
         }
         
         Shift shift=employee.getShift();
-        
+        if (shift == null) {
+            throw new IllegalStateException("Shift not assigned to employee");
+        }
         
         if (firstCheckIn == null) {
             attendance.setStatus(AttendanceStatus.ABSENT);
@@ -279,10 +279,21 @@ public class AttendanceService {
     public List<AttendanceResponse> getAttendanceByEmployeeId( Long empId, LocalDate start, LocalDate end) {
         Employee emp = empRepo.findById(empId)
                 .orElseThrow(() -> new RuntimeException("Employee not found"));
-
+        
+        if (start == null || end == null) {
+            throw new IllegalArgumentException("Start and End date cannot be null");
+        }
+        
+        if (emp.getHireDate() == null) {
+            throw new RuntimeException("Employee hire date is missing");
+        }
+        
+        if (emp.getShift() == null) {
+            throw new IllegalStateException("Shift not assigned to employee");
+        }
         
         LocalDate hireDate = emp.getHireDate();
-        if (start.isBefore(hireDate)) {
+        if (hireDate != null && start.isBefore(hireDate)) {
             start = hireDate;
         }
        
@@ -293,7 +304,9 @@ public class AttendanceService {
         
         Map<LocalDate, Attendance> attendanceMap = new HashMap<>();
         for (Attendance a : attendanceList) {
-            attendanceMap.put(a.getDate(), a);
+            if(a.getDate() != null) {
+            	attendanceMap.put(a.getDate(), a);
+            }
         }
 
         List<AttendanceResponse> resList = new ArrayList<>();

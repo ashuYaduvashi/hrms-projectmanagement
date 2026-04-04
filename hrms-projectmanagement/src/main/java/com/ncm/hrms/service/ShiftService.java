@@ -4,6 +4,9 @@ package com.ncm.hrms.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.ncm.hrms.dto.common.ShiftDto;
 import com.ncm.hrms.entity.Employee;
@@ -13,15 +16,19 @@ import com.ncm.hrms.repository.ShiftRepository;
 
 @Service
 public class ShiftService {
-
+  
+	private static final Logger log = LoggerFactory.getLogger(ShiftService.class);
+	
     private final ShiftRepository shiftRepo;
     private final EmployeeRepository employeeRepo;
+    private final NotificationService notiSer;
 
     public ShiftService(ShiftRepository shiftRepo,
-                        EmployeeRepository employeeRepo) {
+                        EmployeeRepository employeeRepo,NotificationService notiSer) {
 
         this.shiftRepo = shiftRepo;
         this.employeeRepo = employeeRepo;
+        this.notiSer=notiSer;
     }
 
    
@@ -92,7 +99,7 @@ public class ShiftService {
     }
 
    
-
+   @Transactional
     public void assignShiftToEmployee(Long shiftId, Long employeeId) {
 
         Shift shift = shiftRepo.findById(shiftId)
@@ -106,6 +113,13 @@ public class ShiftService {
         employee.setShift(shift);
 
         employeeRepo.save(employee);
+        
+        try {
+        	notiSer.createNotification(employeeId,  "Shift '" + shift.getName() + "' assigned to you");
+        }
+        catch(Exception e){
+        	log.error("Notification failed for employeeId {}: {}", employeeId, e.getMessage());
+        }
     }
 
     

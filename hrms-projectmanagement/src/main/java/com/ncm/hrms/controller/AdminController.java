@@ -1,5 +1,7 @@
 package com.ncm.hrms.controller;
 
+import java.util.List;
+
 //import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.ncm.hrms.dto.common.EmployeeDropdownDto;
 import com.ncm.hrms.dto.request.EmployeeRequest;
 import com.ncm.hrms.dto.response.EmployeeResponse;
 import com.ncm.hrms.service.AdminService;
@@ -78,5 +81,13 @@ public class AdminController {
             @PathVariable Long id,
             @RequestBody EmployeeRequest request) {
         return adminService.updateEmployee(id, request);
+    }
+    
+    
+    //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    
+    @GetMapping("/employees/dropdown")
+    public List<EmployeeDropdownDto> getEmployeeDropdown() {
+        return adminService.getEmployeeDropdown();
     }
 }
